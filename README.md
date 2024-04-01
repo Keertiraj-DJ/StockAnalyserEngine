@@ -7,8 +7,10 @@ Note : THIS APP IS NOT HOSTED IN ANY OF THE REMOTE SERVERS, SO TO USE THE API'S 
 API Documentation:
 
 1. /get_52_week_high => This API returns 52 week high value of a given share
-API Parameters : 
-    	Required: stock_ticker
+   
+API Parameters :
+
+	Required: stock_ticker
     	The name of the equity of your choice. For example: stock_ticker=INFY.BSE
 
 	Required: api_key
@@ -18,9 +20,11 @@ API Parameters :
     	By default, datatype=json. Strings json and html are accepted with the following specifications: json returns the 52 week high in JSON format; html returns the 52 week high as a html page.
 
 
-2. /difference_from_52_week_high  => This API returns %age difference of a share from its 52 week high value
+3. /difference_from_52_week_high  => This API returns %age difference of a share from its 52 week high value
+   
 API Parameters : 
-    	Required: stock_ticker
+
+	Required: stock_ticker
     	The name of the equity of your choice. For example: stock_ticker=INFY.BSE
 
 	Required: api_key
@@ -30,11 +34,11 @@ API Parameters :
     	By default, datatype=json. Strings json and html are accepted with the following specifications: json returns the %age difference in JSON format; html returns the %age difference as a html 	page.
 
 
-3. /stocks_list  => This API returns list of stocks that are available in the Mongo DB
+5. /stocks_list  => This API returns list of stocks that are available in the Mongo DB
 
-4. /dashboard_stock  => This API returns list of stocks that were added to the dashboard list present in MongoDb
+6. /dashboard_stock  => This API returns list of stocks that were added to the dashboard list present in MongoDb
 
-5. /add_stock  => This API adds given stock to the dashboard list in Mongo
+7. /add_stock  => This API adds given stock to the dashboard list in Mongo
 	method= 'POST' 
 
 

@@ -2,11 +2,14 @@ from flask import g
 from pymongo import MongoClient
 import certifi
 from model.stock import Stock
+import os
+from dotenv import load_dotenv
 
-mongoDbpassword = "mongo_db_password"
+load_dotenv()  # Load environment variables from .env if available
+mongo_password = os.getenv('MONGO_PASSWORD')
 
 def connect_db():
-    conn_uri = f"mongodb+srv://kdj:{mongoDbpassword}@stockanalyser.txmvtzq.mongodb.net/"
+    conn_uri = f"mongodb+srv://kdj:{mongo_password}@stockanalyser.txmvtzq.mongodb.net/"
     client = MongoClient(
         conn_uri,
         tlsCAFile=certifi.where()

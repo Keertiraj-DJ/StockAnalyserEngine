@@ -29,7 +29,7 @@ def diff_from_52_week_high():
         response = {"stock_ticker": stock_ticker, "percentage_diff_from_52_week_high" : percentage_difference}
         return jsonify(response)
 
-@app.route('/', methods=['GET'])
+@app.route('/stocks_list', methods=['GET'])
 def get_stocks_list():
     stocks = stock_utils.getStocks()
     stocks_dict = [vars(stock) for stock in stocks]

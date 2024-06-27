@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, render_template
 import utils.stock_business_logic as stock_utils
 from model.stock import Stock
 from flask_cors import CORS
@@ -81,5 +81,9 @@ def apiStatus(isError = False, msg="API call successful", code=200):
         "code": code
     }
     
+@app.route('/')
+def home():
+    return render_template('index.html')
+
 if __name__ == '__main__':  
     app.run()

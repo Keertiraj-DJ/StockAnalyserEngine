@@ -2,7 +2,7 @@
 
 This is a simple project that I created while learning Flask application development :)
 
-Note : THIS APP IS NOT HOSTED IN ANY OF THE REMOTE SERVERS, SO TO USE THE API'S ONE HAS TO CLONE IT AND RUN IT ON A LOCALHOST
+Web interface to visualise the project - https://integral-christa-keesha-2df2a8e4.koyeb.app
 
 API Documentation:
 
@@ -11,7 +11,7 @@ API Documentation:
 API Parameters :
 
 	Required: stock_ticker
-    	The name of the equity of your choice. For example: stock_ticker=INFY.BSE
+    	Stock ticker of the equity + .BSE | For example: stock_ticker=INFY.BSE
 
 	Required: api_key
     	Your Alphavantage API key. For example: api_key=your_alphavantage_key
@@ -25,7 +25,7 @@ API Parameters :
 API Parameters : 
 
 	Required: stock_ticker
-    	The name of the equity of your choice. For example: stock_ticker=INFY.BSE
+    	Stock ticker of the equity + .BSE | For example: stock_ticker=INFY.BSE
 
 	Required: api_key
     	Your Alphavantage API key. For example: api_key=your_alphavantage_key
@@ -41,10 +41,25 @@ API Parameters :
 7. /add_stock  => This API adds given stock to the dashboard list in Mongo
 	method= 'POST' 
 
+API Parameters : 
 
+	Required: stock_ticker
+    	Stock ticker of the equity to add. For example: stock_ticker=INFY
+
+	Required: stock_name
+    	Stock name of the equity to add. For example: stock_name=Infosys Limited
+
+
+8. /remove_stock  => This API removes given stock from the dashboard list in Mongo
+	method= 'POST' 
+
+API Parameters : 
+
+	Required: stock_ticker
+    	Stock ticker of the equity to remove. For example: stock_ticker=INFY
 
 Dependency :
-1. https://www.alphavantage.co ==> To fetch stock data
+1. https://www.alphavantage.co ==> To fetch realtime stock data
 2. Used MongoDb as Database
 
 

@@ -1,5 +1,5 @@
 import requests
-from utils.db_utils import getStocksList, addStockToDashboardDB, getDashboardStocksFromDb
+from utils.db_utils import getStocksList, addStockToDashboardDB, getDashboardStocksFromDb, removeStockFromDashboardDB
 
 def get_52_week_high_value(stock_ticker, api_key):
     url = f'https://www.alphavantage.co/query?function=TIME_SERIES_MONTHLY&symbol={stock_ticker}&apikey={api_key}'
@@ -35,6 +35,10 @@ def getStocks():
 
 def addStockToDashboard(stock):
     cursor = addStockToDashboardDB(stock)
+    return cursor
+
+def removeStockFromDashboard(stock_ticker):
+    cursor = removeStockFromDashboardDB(stock_ticker)
     return cursor
 
 def getDashboardStocks():

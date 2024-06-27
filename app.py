@@ -54,6 +54,18 @@ def add_stock_to_dashboard():
         response = {"response": {"stock_added": isAdded}, "status" : apiStatus(True, "API call Failed", 1)}
     return jsonify(response)
 
+@app.route('/remove_stock', methods=['POST'])
+def remove_stock_from_dashboard():
+    data = request.get_json()
+    stock_ticker = data.get('stock_ticker', '')
+    cursor = stock_utils.removeStockFromDashboard(stock_ticker)
+    isRemoved = cursor.acknowledged
+    if(isRemoved):
+        response = {"response": {"stock_removed": isRemoved}, "status" : apiStatus(False, "API call Succesful", 200)}
+    else:
+        response = {"response": {"stock_removed": isRemoved}, "status" : apiStatus(True, "API call Failed", 1)}
+    return jsonify(response)
+
 @app.route('/dashboard_stock', methods=['GET'])
 def get_dashboard_stocks():
     stocks = stock_utils.getDashboardStocks()

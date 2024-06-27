@@ -51,6 +51,11 @@ def addStockToDashboardDB(stock):
     cursor = db.tracking_stocks.insert_one(document)
     return cursor
 
+def removeStockFromDashboardDB(stock_ticker):
+    db = get_user_db()
+    cursor = db.tracking_stocks.delete_one({'stock_ticker': stock_ticker})
+    return cursor
+
 def getDashboardStocksFromDb():
     db = get_user_db()
     stocks = []

@@ -1,7 +1,10 @@
 from flask import Flask, jsonify, request
 import utils.stock_business_logic as stock_utils
 from model.stock import Stock
+from flask_cors import CORS
+
 app = Flask(__name__)
+CORS(app)  # This will enable CORS for all routes
 
 @app.route('/get_52_week_high', methods=['GET'])
 def get_52_week_high():

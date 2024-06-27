@@ -1,13 +1,18 @@
+/* Basic reset for consistent appearance across browsers */
+* {
+    margin: 10;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* General styles */
 body {
     font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #f0f2f5;
 }
 
 .dashboard {
-    max-width: 1800px;
-    margin: auto;
+    display: flex;
+    flex-direction: column;
     padding: 20px;
 }
 
@@ -20,23 +25,23 @@ header {
 
 main {
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
+    gap: 5px;
     margin-top: 20px;
 }
 
-.watchlist {
+/* Watchlist styles */
+.watchlist {    
     background-color: white;
     padding: 20px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    width: 80%;
-    margin-right: 20px;
 }
 
+/* Search section styles */
 .search-section {
     background-color: white;
     padding: 20px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    width: 20%;
 }
 
 h2 {
@@ -45,7 +50,6 @@ h2 {
 
 ul {
     list-style: none;
-    padding: 0;
 }
 
 li {
@@ -55,37 +59,38 @@ li {
     position: relative;
 }
 
-li:hover {
-    background-color: #f0f2f5;
-}
-
 li button {
     display: none;
     position: absolute;
     right: 10px;
-    top: 10px;
 }
 
 li:hover button {
     display: inline-block;
 }
 
-#stock-info {
-    font-size: 1.2em;
-}
-
 #search {
-    width: 90%;
+    width: 100%;
     padding: 10px;
-    margin-bottom: 20px;
-    margin-right: 20px;
+    margin-bottom: 10px;
     border: 1px solid #ddd;
     border-radius: 4px;
 }
 
-#stock-table {
+table {
     width: 100%;
     border-collapse: collapse;
+}
+
+th,
+td {
+    text-align: left;
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+th {
+    background-color: #f2f2f2;
 }
 
 #stock-table th,
@@ -103,19 +108,6 @@ li:hover button {
     background-color: #f4f4f4;
 }
 
-.positive {
-    color: green;
-}
-
-.negative {
-    color: red;
-}
-
-.actions {
-    display: flex;
-    gap: 5px;
-}
-
 button {
     padding: 5px 10px;
     border: none;
@@ -131,4 +123,22 @@ button.add {
 button.remove {
     background-color: red;
     color: white;
+}
+
+/* Media queries for responsiveness */
+@media (min-width: 768px) {
+    main {
+        flex-direction: row;
+        justify-content: space-between;
+    }
+
+    .watchlist {
+        flex: 1.5;
+        margin: 0 5px;
+    }
+
+    .search-section {
+        flex: 0.5;
+        margin: 0 5px;
+    }
 }

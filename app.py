@@ -1,9 +1,11 @@
+import logging
 from flask import Flask, jsonify, request, render_template
 import utils.stock_business_logic as stock_utils
 from model.watchlistStock import WatchlistStock
 from flask_cors import CORS
 
 app = Flask(__name__)
+app.logger.setLevel(logging.INFO)
 CORS(app)  # This will enable CORS for all routes
 
 @app.route('/get_52_week_high', methods=['GET'])
@@ -90,6 +92,7 @@ def get_dashboard_stocks():
     stocks_dict = [vars(stock) for stock in watchlist]
     response = {"response": { "stock_list": stocks_dict}, "status" : apiStatus(False, "API call Succesful", 200)}
     print(jsonify(response))
+    app.logger.info(response)
     return jsonify(response)
 
 def apiStatus(isError = False, msg="API call successful", code=200):

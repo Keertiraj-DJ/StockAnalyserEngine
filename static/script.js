@@ -5,8 +5,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const stockTableBody = document.querySelector('#stock-table tbody');
     const loaderItem = document.getElementById('loader');
 
-    //const base_url = 'https://integral-christa-keesha-2df2a8e4.koyeb.app'
-    const base_url = 'http://127.0.0.1:5000'
+    const base_url = 'https://integral-christa-keesha-2df2a8e4.koyeb.app'
+    //const base_url = 'http://127.0.0.1:5000'
 
     let watchlistStocks = [];
     let allStocks = [];

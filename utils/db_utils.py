@@ -2,6 +2,7 @@ from flask import g
 from pymongo import MongoClient
 import certifi
 from model.stock import Stock
+from model.watchlistStock import WatchlistStock
 import os
 from dotenv import load_dotenv
 
@@ -42,11 +43,13 @@ def getStocksList():
         stocks.append(stock)
     return stocks
 
-def addStockToDashboardDB(stock):
+def addStockToDashboardDB(WatchlistStock):
     db = get_user_db()
     document = {
-        'stock_ticker': stock.stock_ticker,
-        'stock_name': stock.stock_name
+        'stock_ticker': WatchlistStock.stock_ticker,
+        'stock_name': WatchlistStock.stock_name,
+        'current_value': WatchlistStock.current_value,
+        'percentage_from_52week_high': WatchlistStock.percentage_from_52week_high
     }
     cursor = db.tracking_stocks.insert_one(document)
     return cursor
@@ -58,15 +61,28 @@ def removeStockFromDashboardDB(stock_ticker):
 
 def getDashboardStocksFromDb():
     db = get_user_db()
-    stocks = []
+    watchlist = []
     cursor = db.tracking_stocks.find()
     for document in cursor:
-        stock = Stock(document['stock_ticker'], document['stock_name'])
-        stocks.append(stock)
-    print(stocks)
-    return stocks
+        stock = WatchlistStock(document['stock_ticker'], document['stock_name'], document['current_value'], document['percentage_from_52week_high'])
+        watchlist.append(stock)
+    print(watchlist)
+    return watchlist
 
 def getStockByTicker(ticker):
     db = get_global_db()
     print(ticker)
     return db.stocks.find_one({"stock_ticker": ticker})
+
+def updateWatchlistDataInDb(watchlistStock : WatchlistStock):
+    db = get_user_db()
+    filter = { 'stock_ticker': watchlistStock.stock_ticker }
+    update = { '$set': { 'percentage_from_52week_high': f"{watchlistStock.percentage_from_52week_high:.2f}%",
+                         'current_value': f"{watchlistStock.current_value:.2f}"} }
+    return db.tracking_stocks.update_one(filter, update)
+
+def updateCurrentValueInDb(watchlistStock : WatchlistStock):
+    db = get_user_db()
+    filter = { 'stock_ticker': watchlistStock.stock_ticker }
+    update = { '$set': { 'current_value': f"{watchlistStock.current_value:.2f}"} }
+    return db.tracking_stocks.update_one(filter, update)

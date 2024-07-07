@@ -1,6 +1,6 @@
 /* Basic reset for consistent appearance across browsers */
 * {
-    margin: 10;
+    margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
@@ -31,10 +31,17 @@ main {
 }
 
 /* Watchlist styles */
-.watchlist {    
+.watchlist {
     background-color: white;
     padding: 20px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
 }
 
 /* Search section styles */
@@ -48,27 +55,6 @@ h2 {
     margin-top: 0;
 }
 
-ul {
-    list-style: none;
-}
-
-li {
-    padding: 10px;
-    border-bottom: 1px solid #ddd;
-    cursor: pointer;
-    position: relative;
-}
-
-li button {
-    display: none;
-    position: absolute;
-    right: 10px;
-}
-
-li:hover button {
-    display: inline-block;
-}
-
 #search {
     width: 100%;
     padding: 10px;
@@ -77,35 +63,60 @@ li:hover button {
     border-radius: 4px;
 }
 
+.table-container {
+    display: grid;
+    grid-template-rows: auto 1fr;
+    grid-template-columns: 1fr;
+    height: 400px;
+    overflow: scroll;
+}
+
 table {
     width: 100%;
-    border-collapse: collapse;
 }
 
-th,
-td {
-    text-align: left;
-    padding: 10px;
-    border-bottom: 1px solid #ddd;
-}
-
-th {
-    background-color: #f2f2f2;
-}
-
-#stock-table th,
-#stock-table td {
-    border: 1px solid #ddd;
-    padding: 10px;
-    text-align: left;
-}
-
-#stock-table tr:hover {
+tr:hover {
     background-color: #f0f2f5;
 }
 
-#stock-table th {
+table th {
     background-color: #f4f4f4;
+}
+
+#stock-table {
+    border-collapse: collapse;
+}
+
+#stock-table thead {
+    background-color: #f2f2f2;
+}
+
+#stock-table tbody {
+    display: block;
+    overflow-y: auto;
+    height: 400px; /* Adjust as needed */
+}
+
+#stock-table tr {
+    display: grid;
+    grid-template-columns: 75% 25%; /* Define custom widths */
+}
+#stock-table th, #stock-table td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: left;
+    box-sizing: border-box;
+}
+#stock-table thead th {
+    position: sticky;
+    top: 0;
+    background-color: #f2f2f2;
+}
+
+#watchlist-table th, #watchlist-table td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: left;
 }
 
 button {
@@ -123,6 +134,44 @@ button.add {
 button.remove {
     background-color: red;
     color: white;
+}
+
+button.refresh {
+    background-color: green;
+    color: white;
+}
+
+/* Loader style */
+.loader {
+    border: 4px solid #f3f3f3;
+    border-radius: 50%;
+    border-top: 4px solid #3498db;
+    width: 20px;
+    height: 20px;
+    -webkit-animation: spin 1s linear infinite;
+    /* Safari */
+    animation: spin 1s linear infinite;
+}
+
+/* Safari */
+@-webkit-keyframes spin {
+    0% {
+        -webkit-transform: rotate(0deg);
+    }
+
+    100% {
+        -webkit-transform: rotate(360deg);
+    }
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
 }
 
 /* Media queries for responsiveness */

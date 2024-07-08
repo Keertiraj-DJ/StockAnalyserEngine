@@ -38,7 +38,11 @@
             </div>
 
             <div class="search-section">
-                <input type="text" id="search" placeholder="Search for stocks...">
+                <div class="search-container">
+                    <input type="text" id="search" placeholder="Search for stocks...">
+                    <button id="add-stock-button" class="addstock" type="button">Add stock</button>
+                </div>
+                
                 <div class="table-container">
                     <table id="stock-table">
                         <thead>
@@ -55,6 +59,23 @@
             </div>
         </main>
     </div>
+
+    <!-- Add stock dialog element -->
+    <dialog id="add_stock_dialog">
+        <form id="add_stock_dialog_form">
+            <h2>Add Stock</h2>
+            <br>
+            <label for="stock_ticker">Stock ticker:</label>
+            <input type="text" id="stock_ticker" name="stock_ticker" required><br><br>
+            <label for="stock_name">Stock name:</label>
+            <input type="text" id="stock_name" name="stock_name" required><br><br>
+            <div class="dialog-buttons">
+                <button type="button" id="cancel-dialog-btn">Cancel</button>
+                <button type="submit">Submit</button>
+            </div>
+        </form>
+    </dialog>
+
     <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
 

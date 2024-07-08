@@ -1,4 +1,5 @@
 from flask import Flask, jsonify, request, render_template
+from datetime import datetime
 import utils.stock_business_logic as stock_utils
 from model.watchlistStock import WatchlistStock
 from flask_cors import CORS
@@ -24,16 +25,14 @@ def diff_from_52_week_high():
     api_key = request.args.get('api_key')
     datatype = request.args.get('datatype')
     current_value = stock_utils.get_current_stock_val(stock_ticker, api_key)
-    high_value = stock_utils.get_52_week_high_value(stock_ticker, api_key)
-    percentage_difference = 'NA'
-    if (type(current_value) != str) and (type(high_value) != str) : 
-        percentage_difference = ((current_value - high_value) / high_value) * 100
+    high_value = stock_utils.get_52_week_high_value(stock_ticker, api_key) 
+    percentage_difference = ((current_value - high_value) / high_value) * 100
     cursor = stock_utils.updateWatchlistData(WatchlistStock(stock_ticker, "",current_value, percentage_difference))
     updateSuccessful = cursor.matched_count > 0
     if(datatype == 'html'):
         return f'<h1>{stock_ticker} is {percentage_difference} % down from its 52 week high </h1>'
     else:
-        response = {"response": {"stock_ticker": stock_ticker, "percentage_diff_from_52_week_high" : percentage_difference, "updateSuccessful":updateSuccessful }, "status" : apiStatus(False, "API call Succesful", 200)}
+        response = {"response": {"stock_ticker": stock_ticker, "percentage_diff_from_52_week_high" : percentage_difference, "updateSuccessful":updateSuccessful, "updated_at": current_datetime() }, "status" : apiStatus(False, "API call Succesful", 200)}
         return jsonify(response)
     
 @app.route('/current_value', methods=['GET'])
@@ -63,7 +62,7 @@ def get_stocks_list():
 @app.route('/add_stock', methods=['POST'])
 def add_stock_to_dashboard():
     data = request.get_json()
-    stockObj = WatchlistStock(data.get('stock_ticker', ''), data.get('stock_name', ''), "Refresh", "Refresh")
+    stockObj = WatchlistStock(data.get('stock_ticker', ''), data.get('stock_name', ''), 0.0, 0.0)
     cursor = stock_utils.addStockToDashboard(stockObj)
     isAdded = cursor.acknowledged
     if(isAdded):
@@ -92,6 +91,10 @@ def get_dashboard_stocks():
     print(jsonify(response))
     return jsonify(response)
 
+@app.route('/')
+def home():
+    return render_template('index.html')
+
 def apiStatus(isError = False, msg="API call successful", code=200):
     return {
         "isError": isError,
@@ -99,9 +102,10 @@ def apiStatus(isError = False, msg="API call successful", code=200):
         "code": code
     }
     
-@app.route('/')
-def home():
-    return render_template('index.html')
+def current_datetime():
+    now = datetime.now()
+    current_time = now.strftime("%Y-%m-%d %H:%M")
+    return current_time
 
 if __name__ == '__main__':  
     app.run()

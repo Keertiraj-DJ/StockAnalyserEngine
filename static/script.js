@@ -4,19 +4,20 @@ document.addEventListener('DOMContentLoaded', () => {
     const searchInput = document.getElementById('search');
     const stockTableBody = document.querySelector('#stock-table tbody');
     const loaderItem = document.getElementById('loader');
+    const refreshTime = document.getElementById('refresh-time');
 
     //const base_url = 'tender-nightingale-keesha-36143a60.koyeb.app'
-    const base_url = 'https://stockanalyserengine.onrender.com'
-    //const base_url = 'http://127.0.0.1:5000'
+    //const base_url = 'https://stockanalyserengine.onrender.com'
+    const base_url = 'http://127.0.0.1:5000'
 
     let watchlistStocks = [];
     let allStocks = [];
 
     function loader(visibility) {
         if (visibility == "show") {
-            loaderItem.style.display = 'block';
+            loaderItem.style.visibility = 'visible';
         } else
-            loaderItem.style.display = 'none';
+            loaderItem.style.visibility = 'hidden';
     }
     //Handle refresh button
     refreshButton.addEventListener('click', () => {
@@ -28,6 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
     Promise.all([fetchAllStocks(), fetchWatchlist()])
         .then(() => {
             displayStockTable(allStocks);
+            updateWatchlistStockData();
         });
 
     // Fetch all stocks from the API
@@ -75,8 +77,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 const urlWithParams = `${url_52weekhigh}?${queryString}`;
                 const response = await fetch(urlWithParams);
                 const data = await response.json();
-                if (data && data.response && data.response.percentage_diff_from_52_week_high) {
+                if (data && data.response && data.response.percentage_diff_from_52_week_high && data.response.updated_at) {
                     updateSuccessful = data.response.updateSuccessful;
+                    refreshTime.textContent = `Last refreshed at - ${data.response.updated_at}`
                 } else {
                     console.error('Invalid data structure:', data);
                 }
@@ -96,7 +99,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const tr = document.createElement('tr');
             tr.innerHTML = `<td>${stock.stock_name}(${stock.stock_ticker})</td>
                 <td>${stock.current_value}</td>
-                <td>${stock.percentage_from_52week_high}</td>
+                <td>${stock.percentage_from_52week_high}%</td>
                 `;
             // const removeButton = document.createElement('button');
             // removeButton.textContent = 'Remove';

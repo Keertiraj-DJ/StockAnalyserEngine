@@ -18,7 +18,8 @@
             <div class="watchlist">
                 <div class="header-container">
                     <h2>Watchlist</h2>
-                    <div id="loader" class="loader" style="display: none;"></div>
+                    <div id="loader" class="loader" style="visibility: hidden;"></div>
+                    <div id="refresh-time" class="text"></div>
                     <button id="refresh-button" class="refresh" type="button">Refresh</button>
                 </div>
 
@@ -51,7 +52,7 @@
                         </tbody>
                     </table>
                 </div>
-                </div>
+            </div>
         </main>
     </div>
     <script src="{{ url_for('static', filename='script.js') }}"></script>

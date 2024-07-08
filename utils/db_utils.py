@@ -77,12 +77,13 @@ def getStockByTicker(ticker):
 def updateWatchlistDataInDb(watchlistStock : WatchlistStock):
     db = get_user_db()
     filter = { 'stock_ticker': watchlistStock.stock_ticker }
-    update = { '$set': { 'percentage_from_52week_high': f"{watchlistStock.percentage_from_52week_high:.2f}%",
-                         'current_value': f"{watchlistStock.current_value:.2f}"} }
+    update = { '$set': { 'percentage_from_52week_high': round(watchlistStock.percentage_from_52week_high, 2),
+                         'current_value': round(watchlistStock.current_value, 2)}
+                }
     return db.tracking_stocks.update_one(filter, update)
 
 def updateCurrentValueInDb(watchlistStock : WatchlistStock):
     db = get_user_db()
     filter = { 'stock_ticker': watchlistStock.stock_ticker }
-    update = { '$set': { 'current_value': f"{watchlistStock.current_value:.2f}"} }
+    update = { '$set': { 'current_value': round(watchlistStock.current_value, 2)} }
     return db.tracking_stocks.update_one(filter, update)

@@ -87,3 +87,12 @@ def updateCurrentValueInDb(watchlistStock : WatchlistStock):
     filter = { 'stock_ticker': watchlistStock.stock_ticker }
     update = { '$set': { 'current_value': round(watchlistStock.current_value, 2)} }
     return db.tracking_stocks.update_one(filter, update)
+
+def addNewStockToDb(stock : Stock):
+    db = get_global_db()
+    document = {
+        'stock_ticker': stock.stock_ticker,
+        'stock_name': stock.stock_name
+    }
+    cursor = db.stocks.insert_one(document)
+    return cursor

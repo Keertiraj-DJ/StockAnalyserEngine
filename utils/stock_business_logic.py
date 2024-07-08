@@ -1,5 +1,5 @@
 import requests
-from utils.db_utils import getStocksList, addStockToDashboardDB, getDashboardStocksFromDb, removeStockFromDashboardDB, updateWatchlistDataInDb, updateCurrentValueInDb
+from utils.db_utils import getStocksList, addStockToDashboardDB, getDashboardStocksFromDb, removeStockFromDashboardDB, updateWatchlistDataInDb, updateCurrentValueInDb, addNewStockToDb
 from bs4 import BeautifulSoup
 
 def get_52_week_high_value(stock_ticker, api_key):
@@ -98,4 +98,8 @@ def updateWatchlistData(watchlistStock):
 
 def updateCurrentValue(watchlistStock):
     cursor = updateCurrentValueInDb(watchlistStock)
+    return cursor
+
+def addNewStock(stock):
+    cursor = addNewStockToDb(stock)
     return cursor

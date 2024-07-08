@@ -1,8 +1,10 @@
 from flask import Flask, jsonify, request, render_template
 from datetime import datetime
 import pytz
+from pymongo.errors import DuplicateKeyError
 import utils.stock_business_logic as stock_utils
 from model.watchlistStock import WatchlistStock
+from model.stock import Stock
 from flask_cors import CORS
 
 app = Flask(__name__)
@@ -90,6 +92,29 @@ def get_dashboard_stocks():
     stocks_dict = [vars(stock) for stock in watchlist]
     response = {"response": { "stock_list": stocks_dict}, "status" : apiStatus(False, "API call Succesful", 200)}
     print(jsonify(response))
+    return jsonify(response)
+
+@app.route('/add_new_stock', methods=['POST'])
+def add_new_stock_to_db():
+    try:
+        data = request.get_json()
+        stockObj = Stock(data.get('stock_ticker', ''), data.get('stock_name', ''))
+        cursor = stock_utils.addNewStock(stockObj)
+        isAdded = cursor.acknowledged
+        if(isAdded):
+            response = {"response": {"stock_added": isAdded}, "status" : apiStatus(False, "API call Succesful", 200)}
+        else:
+            response = {"response": {"stock_removed": isAdded}, "status" : apiStatus(True, "API call Failed", 1)}
+    except DuplicateKeyError:
+        response = {
+            "response": {"stock_added": False},
+            "status": apiStatus(True, "Duplicate key error: Stock already exists", 409)
+        }
+    except Exception as e:
+        response = {
+            "response": {"stock_added": False},
+            "status": apiStatus(True, f"An error occurred: {str(e)}", 500)
+        }
     return jsonify(response)
 
 @app.route('/')

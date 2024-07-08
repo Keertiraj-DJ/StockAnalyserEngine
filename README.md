@@ -1,70 +1,41 @@
 # Stock Analyser Engine
+## _Project Overview_
 
-This is a simple project that I created while learning Flask application development :)
+This project was created to learn Full-Stack development, focusing initially on backend development. It has evolved into a useful analytics tool that I frequently utilize.
 
-Web interface to visualise the project - https://integral-christa-keesha-2df2a8e4.koyeb.app
+## _Web Interfaces_
+- Primary -  [Stock Analyzer Engine on Koyeb](https://tender-nightingale-keesha-36143a60.koyeb.app)
+- Backup -  [Stock Analyzer Engine on Render](https://stockanalyserengine.onrender.com)
 
-API Documentation:
+## _Features_
+- Add or Remove Stocks of your interest to Watchlist.
+- Keep track of and analyze data for the stocks in your watchlist.
+- Seamlessly integrate new stocks into the database when they are not already present.
 
-1. /get_52_week_high => This API returns 52 week high value of a given share
-   
-API Parameters :
+## _Tech Stack_
+1. **Frontend:**
+   - HTML
+   - CSS
+   - JavaScript
 
-	Required: stock_ticker
-    	Stock ticker of the equity + .BSE | For example: stock_ticker=INFY.BSE
+2. **Backend:**
+   - Flask
 
-	Required: api_key
-    	Your Alphavantage API key. For example: api_key=your_alphavantage_key
+3. **Database:**
+   - MongoDB
 
-	Optional: datatype
-    	By default, datatype=json. Strings json and html are accepted with the following specifications: json returns the 52 week high in JSON format; html returns the 52 week high as a html page.
+4. **Deployment Servers:**
+   - Koyeb
+   - Render
 
-
-3. /difference_from_52_week_high  => This API returns %age difference of a share from its 52 week high value
-   
-API Parameters : 
-
-	Required: stock_ticker
-    	Stock ticker of the equity + .BSE | For example: stock_ticker=INFY.BSE
-
-	Required: api_key
-    	Your Alphavantage API key. For example: api_key=your_alphavantage_key
-
-	Optional: datatype
-    	By default, datatype=json. Strings json and html are accepted with the following specifications: json returns the %age difference in JSON format; html returns the %age difference as a html 	page.
+## _Api Documentation_
+- Link - [Documentation](https://github.com/Keertiraj-DJ/StockAnalyserEngine/blob/main/ApiDocument.txt)
 
 
-5. /stocks_list  => This API returns list of stocks that are available in the Mongo DB
-
-6. /dashboard_stock  => This API returns list of stocks that were added to the dashboard list present in MongoDb
-
-7. /add_stock  => This API adds given stock to the dashboard list in Mongo
-	method= 'POST' 
-
-API Parameters : 
-
-	Required: stock_ticker
-    	Stock ticker of the equity to add. For example: stock_ticker=INFY
-
-	Required: stock_name
-    	Stock name of the equity to add. For example: stock_name=Infosys Limited
+## _Demo_
+![alt text](webinterface_home.png)
+![alt text](webinterface_addstock.png) 
 
 
-8. /remove_stock  => This API removes given stock from the dashboard list in Mongo
-	method= 'POST' 
-
-API Parameters : 
-
-	Required: stock_ticker
-    	Stock ticker of the equity to remove. For example: stock_ticker=INFY
-
-Dependency :
-1. https://www.alphavantage.co ==> To fetch realtime stock data
-2. Used MongoDb as Database
-
-
-Demo :
-1. ![alt text](get_52_week_high.jpeg)
-2. ![alt text](difference_from_52_week_high.jpeg)
-3. ![alt text](stocks_list.png)
-4. ![alt text](dashboard_stock.png)
+## _License_
+**Free Software, Yeah!**

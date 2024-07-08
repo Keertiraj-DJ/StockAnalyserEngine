@@ -11,9 +11,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const addStockDialogForm = document.getElementById('add_stock_dialog_form');
 
 
-    //const base_url = 'tender-nightingale-keesha-36143a60.koyeb.app/'
+    const base_url = 'tender-nightingale-keesha-36143a60.koyeb.app/'
     //const base_url = 'https://stockanalyserengine.onrender.com'
-    const base_url = 'http://127.0.0.1:5000'
+    //const base_url = 'http://127.0.0.1:5000'
 
     let watchlistStocks = [];
     let allStocks = [];

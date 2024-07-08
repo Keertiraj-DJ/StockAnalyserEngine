@@ -5,10 +5,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const stockTableBody = document.querySelector('#stock-table tbody');
     const loaderItem = document.getElementById('loader');
     const refreshTime = document.getElementById('refresh-time');
+    const addStock = document.getElementById('add-stock-button');
+    const addStockDialog = document.getElementById('add_stock_dialog');
+    const cancelDialogBtn = document.getElementById('cancel-dialog-btn');
+    const addStockDialogForm = document.getElementById('add_stock_dialog_form');
 
-    const base_url = 'tender-nightingale-keesha-36143a60.koyeb.app/'
+
+    //const base_url = 'tender-nightingale-keesha-36143a60.koyeb.app/'
     //const base_url = 'https://stockanalyserengine.onrender.com'
-    //const base_url = 'http://127.0.0.1:5000'
+    const base_url = 'http://127.0.0.1:5000'
 
     let watchlistStocks = [];
     let allStocks = [];
@@ -162,6 +167,25 @@ document.addEventListener('DOMContentLoaded', () => {
             displayStockTable(filteredStocks);
         });
 
+    //Handle add stock button
+    addStock.addEventListener('click', () => {
+        addStockDialog.showModal();
+    });
+
+    //Handle cancel dialog button
+    cancelDialogBtn.addEventListener('click', () => {
+        addStockDialog.close();
+    });
+
+    addStockDialogForm.addEventListener('submit', (event) => {
+        event.preventDefault(); // Prevent the form from submitting the traditional way
+        const fieldStockTicker = document.getElementById('stock_ticker').value;
+        const fieldStockName = document.getElementById('stock_name').value;
+        addNewStockToDb(fieldStockTicker, fieldStockName)
+        addStockDialog.close(); // Close the dialog
+    });
+
+
     async function addWatchListStock(stock) {
         loader("show")
         try {
@@ -212,6 +236,39 @@ document.addEventListener('DOMContentLoaded', () => {
                 console.error('Invalid data structure:', data);
             }
         } catch (error) {
+            return console.error('Error removing stock from watchlist:', error);
+        }
+    }
+
+    async function addNewStockToDb(stockTicker, stockName) {
+        loader("show")
+        try {
+            const requestBody = JSON.stringify({ stock_ticker: stockTicker, stock_name: stockName });
+            const url = `${base_url}/add_new_stock`;
+            const response = await fetch(url,
+                {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: requestBody
+                });
+            const data = await response.json();
+            if (data && data.response && data.response.stock_added) {
+                stockAdded = data.response.stock_added;
+                fetchAllStocks()
+                alert("Stock added successfully.");
+                loader("hide")
+            } else {
+                console.error('Invalid data structure:', data);
+                loader("hide")
+                if(data.status && data.status.message)
+                    alert(data.status.message);
+                else
+                    alert("Stock added successfully.");
+            }
+        } catch (error) {
+            loader("hide")
             return console.error('Error removing stock from watchlist:', error);
         }
     }

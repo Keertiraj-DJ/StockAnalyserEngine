@@ -10,6 +10,13 @@ body {
     font-family: Arial, sans-serif;
 }
 
+main {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    margin-top: 20px;
+}
+
 .dashboard {
     display: flex;
     flex-direction: column;
@@ -21,13 +28,6 @@ header {
     color: white;
     padding: 10px 0;
     text-align: center;
-}
-
-main {
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-    margin-top: 20px;
 }
 
 /* Watchlist styles */
@@ -44,6 +44,13 @@ main {
     margin-bottom: 20px;
 }
 
+.search-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
 /* Search section styles */
 .search-section {
     background-color: white;
@@ -58,9 +65,9 @@ h2 {
 #search {
     width: 100%;
     padding: 10px;
-    margin-bottom: 10px;
     border: 1px solid #ddd;
     border-radius: 4px;
+    margin-right: 10px;
 }
 
 .table-container {
@@ -141,6 +148,14 @@ button.refresh {
     color: white;
 }
 
+button.addstock {
+    background-color: rgb(232, 128, 24);
+    color: white;
+    white-space: nowrap;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
 /* Loader style */
 .loader {
     border: 4px solid #f3f3f3;
@@ -151,6 +166,26 @@ button.refresh {
     -webkit-animation: spin 1s linear infinite;
     /* Safari */
     animation: spin 1s linear infinite;
+}
+
+/* Basic styling for the dialog and its contents */
+dialog {
+    border: none;
+    padding: 30px;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+dialog::backdrop {
+    background-color: rgba(0, 0, 0, 0.5); /* Optional: darken the background */
+}
+.dialog-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
 }
 
 /* Safari */
@@ -179,6 +214,8 @@ button.refresh {
     main {
         flex-direction: row;
         justify-content: space-between;
+        gap: 5px;
+        margin-top: 20px;
     }
 
     .watchlist {

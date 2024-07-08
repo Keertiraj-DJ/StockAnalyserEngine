@@ -1,5 +1,6 @@
 from flask import Flask, jsonify, request, render_template
 from datetime import datetime
+import pytz
 import utils.stock_business_logic as stock_utils
 from model.watchlistStock import WatchlistStock
 from flask_cors import CORS
@@ -103,8 +104,10 @@ def apiStatus(isError = False, msg="API call successful", code=200):
     }
     
 def current_datetime():
-    now = datetime.now()
-    current_time = now.strftime("%Y-%m-%d %H:%M")
+    now_utc = datetime.now(pytz.utc)
+    ist = pytz.timezone('Asia/Kolkata')
+    now_ist = now_utc.astimezone(ist)
+    current_time = now_ist.strftime("%Y-%m-%d %H:%M")
     return current_time
 
 if __name__ == '__main__':  

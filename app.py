@@ -28,9 +28,9 @@ def diff_from_52_week_high():
     api_key = request.args.get('api_key')
     datatype = request.args.get('datatype')
     current_value = stock_utils.get_current_stock_val(stock_ticker, api_key)
-    high_value = stock_utils.get_52_week_high_value(stock_ticker, api_key) 
+    high_value = stock_utils.get_52_week_high_value(stock_ticker, api_key)
     percentage_difference = ((current_value - high_value) / high_value) * 100
-    cursor = stock_utils.updateWatchlistData(WatchlistStock(stock_ticker, "",current_value, percentage_difference))
+    cursor = stock_utils.updateWatchlistData(WatchlistStock(stock_ticker, "",current_value, percentage_difference, ""))
     updateSuccessful = cursor.matched_count > 0
     if(datatype == 'html'):
         return f'<h1>{stock_ticker} is {percentage_difference} % down from its 52 week high </h1>'
@@ -65,7 +65,7 @@ def get_stocks_list():
 @app.route('/add_stock', methods=['POST'])
 def add_stock_to_dashboard():
     data = request.get_json()
-    stockObj = WatchlistStock(data.get('stock_ticker', ''), data.get('stock_name', ''), 0.0, 0.0)
+    stockObj = WatchlistStock(data.get('stock_ticker', ''), data.get('stock_name', ''), 0.0, 0.0, '')
     cursor = stock_utils.addStockToDashboard(stockObj)
     isAdded = cursor.acknowledged
     if(isAdded):
@@ -116,6 +116,22 @@ def add_new_stock_to_db():
             "status": apiStatus(True, f"An error occurred: {str(e)}", 500)
         }
     return jsonify(response)
+
+@app.route('/update_note', methods=['POST'])
+def update_stock_note():
+    data = request.get_json()
+    stockObj = WatchlistStock(data.get('stock_ticker', ''), '', 0.0, 0.0, data.get('note', ''))
+    cursor = stock_utils.updateStockNote(stockObj)
+    isUpdated = cursor.acknowledged
+    if(isUpdated):
+        response = {"response": {"note_updated": isUpdated}, "status" : apiStatus(False, "API call Succesful", 200)}
+    else:
+        response = {"response": {"note_updated": isUpdated}, "status" : apiStatus(True, "API call Failed", 1)}
+    return jsonify(response)
+
+@app.route('/run_script')
+def run_script():
+    return stock_utils.runScript()
 
 @app.route('/')
 def home():

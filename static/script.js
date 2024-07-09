@@ -105,7 +105,18 @@ document.addEventListener('DOMContentLoaded', () => {
             tr.innerHTML = `<td>${stock.stock_name}(${stock.stock_ticker})</td>
                 <td>${stock.current_value}</td>
                 <td>${stock.percentage_from_52week_high}%</td>
+                <td>${stock.note}</td>
                 `;
+            const noteCell = tr.querySelector('td:last-child');
+            noteCell.style.cursor = 'pointer';
+            noteCell.onclick = function () {
+                var currentText = this.innerText;
+                var newText = prompt("Update note:", currentText);
+                if (newText !== null) { // Check if Cancel was not pressed
+                    this.innerText = newText;
+                    updateStockNote(stock.stock_ticker, newText);
+                }
+            };
             // const removeButton = document.createElement('button');
             // removeButton.textContent = 'Remove';
             // removeButton.classList.add('remove');
@@ -262,10 +273,40 @@ document.addEventListener('DOMContentLoaded', () => {
             } else {
                 console.error('Invalid data structure:', data);
                 loader("hide")
-                if(data.status && data.status.message)
+                if (data.status && data.status.message)
                     alert(data.status.message);
                 else
                     alert("Stock added successfully.");
+            }
+        } catch (error) {
+            loader("hide")
+            return console.error('Error removing stock from watchlist:', error);
+        }
+    }
+
+    async function updateStockNote(stockTicker, stockNote) {
+        loader("show")
+        try {
+            const requestBody = JSON.stringify({ stock_ticker: stockTicker, note: stockNote });
+            const url = `${base_url}/update_note`;
+            const response = await fetch(url,
+                {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: requestBody
+                });
+            const data = await response.json();
+            if (data && data.response && data.response.note_updated) {
+                noteUpdated = data.response.note_updated;
+                alert("Note updated successfully.");
+                loader("hide")
+            } else {
+                console.error('Invalid data structure:', data);
+                loader("hide")
+                if (data.status && data.status.message)
+                    alert(data.status.message);
             }
         } catch (error) {
             loader("hide")

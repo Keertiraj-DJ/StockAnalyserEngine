@@ -3,9 +3,11 @@ from datetime import datetime
 import pytz
 from pymongo.errors import DuplicateKeyError
 import utils.stock_business_logic as stock_utils
-from model.watchlistStock import WatchlistStock
 from model.stock import Stock
 from flask_cors import CORS
+import logging
+
+logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
 
 app = Flask(__name__)
 CORS(app)  # This will enable CORS for all routes
@@ -27,24 +29,32 @@ def diff_from_52_week_high():
     stock_ticker = request.args.get('stock_ticker')
     api_key = request.args.get('api_key')
     datatype = request.args.get('datatype')
-    current_value = stock_utils.get_current_stock_val(stock_ticker, api_key)
-    high_value = stock_utils.get_52_week_high_value(stock_ticker, api_key)
-    percentage_difference = ((current_value - high_value) / high_value) * 100
-    cursor = stock_utils.updateWatchlistData(WatchlistStock(stock_ticker, "",current_value, percentage_difference, ""))
-    updateSuccessful = cursor.matched_count > 0
+    cursor, currentVal = stock_utils.updateCurrentValue(stock_ticker, api_key)
+    cursor_PercentFrom52WeekHigh, percentage_difference = stock_utils.updatePercentFrom52WeekHighValue(stock_ticker, currentVal, api_key)
+    updateSuccessful = cursor_PercentFrom52WeekHigh.matched_count > 0
     if(datatype == 'html'):
         return f'<h1>{stock_ticker} is {percentage_difference} % down from its 52 week high </h1>'
     else:
         response = {"response": {"stock_ticker": stock_ticker, "percentage_diff_from_52_week_high" : percentage_difference, "updateSuccessful":updateSuccessful, "updated_at": current_datetime() }, "status" : apiStatus(False, "API call Succesful", 200)}
         return jsonify(response)
     
+@app.route('/update_analytics', methods=['GET'])
+def analytics():
+    api_key = request.args.get('api_key')
+    cursors_match_count = stock_utils.updateAnalytics(api_key)
+    updateSuccessful = all(v == 1 for v in cursors_match_count)
+    if(updateSuccessful):
+        response = {"response": {"analytics_updated": updateSuccessful, "updated_at": current_datetime() }, "status" : apiStatus(False, "API call Succesful", 200)}
+    else:
+        response = {"response": {"analytics_updated": updateSuccessful}, "status" : apiStatus(True, "API call Failed", 1)}
+    return jsonify(response)
+    
 @app.route('/current_value', methods=['GET'])
 def current_value():
     stock_ticker = request.args.get('stock_ticker')
     api_key = request.args.get('api_key')
     datatype = request.args.get('datatype')
-    current_value = stock_utils.get_current_stock_val(stock_ticker, api_key)
-    cursor = stock_utils.updateCurrentValue(WatchlistStock(stock_ticker, "","", current_value))
+    cursor, current_value = stock_utils.updateCurrentValue(stock_ticker, api_key)
     updateSuccessful = cursor.matched_count > 0
     if(datatype == 'html'):
         return f'<h1>Current Value of {stock_ticker} is {current_value}</h1>'
@@ -65,8 +75,7 @@ def get_stocks_list():
 @app.route('/add_stock', methods=['POST'])
 def add_stock_to_dashboard():
     data = request.get_json()
-    stockObj = WatchlistStock(data.get('stock_ticker', ''), data.get('stock_name', ''), 0.0, 0.0, '')
-    cursor = stock_utils.addStockToDashboard(stockObj)
+    cursor = stock_utils.addStockToDashboard(data.get('stock_ticker', ''), data.get('stock_name', ''))
     isAdded = cursor.acknowledged
     if(isAdded):
         response = {"response": {"stock_added": isAdded}, "status" : apiStatus(False, "API call Succesful", 200)}
@@ -120,8 +129,7 @@ def add_new_stock_to_db():
 @app.route('/update_note', methods=['POST'])
 def update_stock_note():
     data = request.get_json()
-    stockObj = WatchlistStock(data.get('stock_ticker', ''), '', 0.0, 0.0, data.get('note', ''))
-    cursor = stock_utils.updateStockNote(stockObj)
+    cursor = stock_utils.updateStockNote(data.get('stock_ticker', ''), data.get('note', ''))
     isUpdated = cursor.acknowledged
     if(isUpdated):
         response = {"response": {"note_updated": isUpdated}, "status" : apiStatus(False, "API call Succesful", 200)}

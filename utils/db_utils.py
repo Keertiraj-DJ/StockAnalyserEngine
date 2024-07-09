@@ -17,7 +17,6 @@ def connect_db():
     )
     return client
 
-
 def get_global_db():
     """Opens a new database connection if there is none yet for the
     current application context.
@@ -43,13 +42,13 @@ def getStocksList():
         stocks.append(stock)
     return stocks
 
-def addStockToDashboardDB(WatchlistStock):
+def addStockToDashboardDB(ticker, stock_name):
     db = get_user_db()
     document = {
-        'stock_ticker': WatchlistStock.stock_ticker,
-        'stock_name': WatchlistStock.stock_name,
-        'current_value': WatchlistStock.current_value,
-        'percentage_from_52week_high': WatchlistStock.percentage_from_52week_high
+        'stock_ticker': ticker,
+        'stock_name': stock_name,
+        'current_value': 0.0,
+        'percentage_from_52week_high': 0.0
     }
     cursor = db.tracking_stocks.insert_one(document)
     return cursor
@@ -66,27 +65,11 @@ def getDashboardStocksFromDb():
     for document in cursor:
         stock = WatchlistStock(document['stock_ticker'], document['stock_name'], document['current_value'], document['percentage_from_52week_high'], document['note'])
         watchlist.append(stock)
-    print(watchlist)
     return watchlist
 
 def getStockByTicker(ticker):
     db = get_global_db()
-    print(ticker)
     return db.stocks.find_one({"stock_ticker": ticker})
-
-def updateWatchlistDataInDb(watchlistStock : WatchlistStock):
-    db = get_user_db()
-    filter = { 'stock_ticker': watchlistStock.stock_ticker }
-    update = { '$set': { 'percentage_from_52week_high': round(watchlistStock.percentage_from_52week_high, 2),
-                         'current_value': round(watchlistStock.current_value, 2)}
-                }
-    return db.tracking_stocks.update_one(filter, update)
-
-def updateCurrentValueInDb(watchlistStock : WatchlistStock):
-    db = get_user_db()
-    filter = { 'stock_ticker': watchlistStock.stock_ticker }
-    update = { '$set': { 'current_value': round(watchlistStock.current_value, 2)} }
-    return db.tracking_stocks.update_one(filter, update)
 
 def addNewStockToDb(stock : Stock):
     db = get_global_db()
@@ -97,12 +80,32 @@ def addNewStockToDb(stock : Stock):
     cursor = db.stocks.insert_one(document)
     return cursor
 
+def updateCurrentValueInDb(ticker, current_value):
+    db = get_user_db()
+    filter = { 'stock_ticker': ticker }
+    update = { '$set': { 'current_value': round(current_value, 2)} }
+    return db.tracking_stocks.update_one(filter, update)
+
+def updatePercentageFrom52WeekHighValueInDb(ticker, percentageFrom52WeekHighValue):
+    db = get_user_db()
+    filter = { 'stock_ticker': ticker }
+    update = { '$set': { 'percentage_from_52week_high': round(percentageFrom52WeekHighValue, 2)} }
+    return db.tracking_stocks.update_one(filter, update)
+
+def updateStockNoteInDb(ticker, note):
+    db = get_user_db()
+    filter = { 'stock_ticker': ticker }
+    update = { '$set': { 'note': note } }
+    return db.tracking_stocks.update_one(filter, update)
+
+def updateAnalyticsDataInDb(watchlistStock : WatchlistStock):
+    db = get_user_db()
+    filter = { 'stock_ticker': watchlistStock.stock_ticker }
+    update = { '$set': { 'percentage_from_52week_high': round(watchlistStock.percentage_from_52week_high, 2),
+                         'current_value': round(watchlistStock.current_value, 2)}
+                }
+    return db.tracking_stocks.update_one(filter, update)
+
 def runMongoDbScript():
     db = get_user_db()
     # return db.tracking_stocks.update_many({}, {'$set': {'note': ''}})
-
-def updateStockNoteInDb(watchlistStock : WatchlistStock):
-    db = get_user_db()
-    filter = { 'stock_ticker': watchlistStock.stock_ticker }
-    update = { '$set': { 'note': watchlistStock.note } }
-    return db.tracking_stocks.update_one(filter, update)

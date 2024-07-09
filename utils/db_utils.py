@@ -64,7 +64,7 @@ def getDashboardStocksFromDb():
     watchlist = []
     cursor = db.tracking_stocks.find()
     for document in cursor:
-        stock = WatchlistStock(document['stock_ticker'], document['stock_name'], document['current_value'], document['percentage_from_52week_high'])
+        stock = WatchlistStock(document['stock_ticker'], document['stock_name'], document['current_value'], document['percentage_from_52week_high'], document['note'])
         watchlist.append(stock)
     print(watchlist)
     return watchlist
@@ -96,3 +96,13 @@ def addNewStockToDb(stock : Stock):
     }
     cursor = db.stocks.insert_one(document)
     return cursor
+
+def runMongoDbScript():
+    db = get_user_db()
+    # return db.tracking_stocks.update_many({}, {'$set': {'note': ''}})
+
+def updateStockNoteInDb(watchlistStock : WatchlistStock):
+    db = get_user_db()
+    filter = { 'stock_ticker': watchlistStock.stock_ticker }
+    update = { '$set': { 'note': watchlistStock.note } }
+    return db.tracking_stocks.update_one(filter, update)

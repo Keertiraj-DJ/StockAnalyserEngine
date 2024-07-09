@@ -10,6 +10,7 @@ This project was created to learn Full-Stack development, focusing initially on 
 ## _Features_
 - Add or Remove Stocks of your interest to Watchlist.
 - Keep track of and analyze data for the stocks in your watchlist.
+- Add notes to remember key points
 - Seamlessly integrate new stocks into the database when they are not already present.
 
 ## _Tech Stack_
@@ -31,11 +32,13 @@ This project was created to learn Full-Stack development, focusing initially on 
 ## _Api Documentation_
 - Link - [Documentation](https://github.com/Keertiraj-DJ/StockAnalyserEngine/blob/main/ApiDocument.txt)
 
+## _Data source_
+- Web scraping - [https://www.google.com/finance/](https://www.google.com/finance/)
+
 
 ## _Demo_
 ![alt text](webinterface_home.png)
 ![alt text](webinterface_addstock.png) 
-
 
 ## _License_
 **Free Software, Yeah!**

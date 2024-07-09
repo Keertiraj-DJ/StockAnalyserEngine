@@ -27,14 +27,14 @@ document.addEventListener('DOMContentLoaded', () => {
     //Handle refresh button
     refreshButton.addEventListener('click', () => {
         loader("show")
-        updateWatchlistStockData()
+        updateAnalytics()
     });
 
     // Fetch data and initialize the app
     Promise.all([fetchAllStocks(), fetchWatchlist()])
         .then(() => {
             displayStockTable(allStocks);
-            updateWatchlistStockData();
+            updateAnalytics()
         });
 
     // Fetch all stocks from the API
@@ -72,28 +72,21 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    async function updateWatchlistStockData() {
+    async function updateAnalytics() {
         loader("show")
-        const url_52weekhigh = `${base_url}/difference_from_52_week_high`;
-        const fetchPromises = watchlistStocks.map(async (stock) => {
-            try {
-                const params = { stock_ticker: stock.stock_ticker };
-                const queryString = new URLSearchParams(params).toString();
-                const urlWithParams = `${url_52weekhigh}?${queryString}`;
-                const response = await fetch(urlWithParams);
-                const data = await response.json();
-                if (data && data.response && data.response.percentage_diff_from_52_week_high && data.response.updated_at) {
-                    updateSuccessful = data.response.updateSuccessful;
-                    refreshTime.textContent = `Last refreshed at - ${data.response.updated_at}`
-                } else {
-                    console.error('Invalid data structure:', data);
-                }
-            } catch (error) {
-                console.error('Error fetching 52_week_high value:', error);
+        try {
+            const url = `${base_url}/update_analytics`;
+            const response = await fetch(url);
+            const data = await response.json();
+            if (data && data.response && data.response.analytics_updated && data.response.updated_at) {
+                refreshTime.textContent = `Last refreshed at - ${data.response.updated_at}`
+                fetchWatchlist();
+            } else {
+                console.error('Invalid data structure:', data);
             }
-        });
-        await Promise.all(fetchPromises);
-        fetchWatchlist();
+        } catch (error) {
+            return console.error('Error updating analytics:', error);
+        }
 
     }
 
@@ -130,7 +123,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
         loader("hide")
     }
-
 
     function displayStockTable(stocks) {
         // Clear previous data
@@ -195,7 +187,6 @@ document.addEventListener('DOMContentLoaded', () => {
         addNewStockToDb(fieldStockTicker, fieldStockName)
         addStockDialog.close(); // Close the dialog
     });
-
 
     async function addWatchListStock(stock) {
         loader("show")

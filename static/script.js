@@ -11,10 +11,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const addStockDialogForm = document.getElementById('add_stock_dialog_form');
 
 
-    const base_url = ''
     //const base_url = 'https://tender-nightingale-keesha-36143a60.koyeb.app'
     //const base_url = 'https://stockanalyserengine.onrender.com'
-    //const base_url = 'http://127.0.0.1:5000'
+    const base_url = 'http://127.0.0.1:5000'
 
     let watchlistStocks = [];
     let allStocks = [];
@@ -43,7 +42,7 @@ document.addEventListener('DOMContentLoaded', () => {
         loader("show")
         try {
             const url = `${base_url}/stocks_list`;
-            const response = await fetch(url);
+            const response = await fetch("https://tender-nightingale-keesha-36143a60.koyeb.app/stocks_list");
             const data = await response.json();
             if (data && data.response && data.response.stock_list) {
                 allStocks = data.response.stock_list;

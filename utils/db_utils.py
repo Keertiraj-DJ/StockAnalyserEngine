@@ -48,7 +48,8 @@ def addStockToDashboardDB(ticker, stock_name):
         'stock_ticker': ticker,
         'stock_name': stock_name,
         'current_value': 0.0,
-        'percentage_from_52week_high': 0.0
+        'percentage_from_52week_high': 0.0,
+        'note':""
     }
     cursor = db.tracking_stocks.insert_one(document)
     return cursor

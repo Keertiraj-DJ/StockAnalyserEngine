@@ -26,14 +26,12 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     //Handle refresh button
     refreshButton.addEventListener('click', () => {
-        loader("show")
         updateAnalytics()
     });
 
     // Fetch data and initialize the app
     Promise.all([fetchAllStocks(), fetchWatchlist()])
         .then(() => {
-            displayStockTable(allStocks);
             updateAnalytics()
         });
 
@@ -46,10 +44,13 @@ document.addEventListener('DOMContentLoaded', () => {
             const data = await response.json();
             if (data && data.response && data.response.stock_list) {
                 allStocks = data.response.stock_list;
+                displayStockTable(allStocks);
             } else {
+                loader("hide")
                 console.error('Invalid data structure:', data);
             }
         } catch (error) {
+            loader("hide")
             return console.error('Error fetching all stocks:', error);
         }
     }
@@ -66,8 +67,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 updateWatchlist();
             } else {
                 console.error('Invalid data structure:', data);
+                loader("hide")
             }
         } catch (error) {
+            loader("hide")
             return console.error('Error fetching watchlist:', error);
         }
     }
@@ -83,8 +86,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 fetchWatchlist();
             } else {
                 console.error('Invalid data structure:', data);
+                loader("hide")
             }
         } catch (error) {
+            loader("hide")
             return console.error('Error updating analytics:', error);
         }
 
@@ -137,8 +142,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 addButton.textContent = 'Add';
                 addButton.classList.add('add');
                 addButton.addEventListener('click', () => {
-                    watchlistStocks.push(stock);
-                    addWatchListStock(stock)
+                    const new_watchlist_stock = {
+                        "current_value": 0.0,
+                        "note": "",
+                        "percentage_from_52week_high": 0.0,
+                        "stock_name": stock.stock_name,
+                        "stock_ticker": stock.stock_ticker
+                    }
+                    watchlistStocks.push(new_watchlist_stock);
+                    updateWatchlist(watchlistStocks);
+                    displayStockTable(allStocks);
+                    addWatchListStock(stock);
                 });
                 actionsTd.appendChild(addButton);
             } else {
@@ -148,6 +162,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 removeButton
                     .addEventListener('click', () => {
                         watchlistStocks = watchlistStocks.filter(item => item.stock_ticker !== stock.stock_ticker);
+                        updateWatchlist(watchlistStocks);
+                        displayStockTable(allStocks);
                         removeWatchListStock(stock.stock_ticker);
                     });
                 actionsTd.appendChild(removeButton);
@@ -204,13 +220,14 @@ document.addEventListener('DOMContentLoaded', () => {
             const data = await response.json();
             if (data && data.response && data.response.stock_added) {
                 stockAdded = data.response.stock_added;
-                updateWatchlistStockData()
+                updateAnalytics()
                 searchInput.value = ''
-                displayStockTable(allStocks);
             } else {
+                loader("hide")
                 console.error('Invalid data structure:', data);
             }
         } catch (error) {
+            loader("hide")
             return console.error('Error adding stock to watchlist:', error);
         }
     }
@@ -231,13 +248,14 @@ document.addEventListener('DOMContentLoaded', () => {
             const data = await response.json();
             if (data && data.response && data.response.stock_removed) {
                 stockRemoved = data.response.stock_removed;
-                updateWatchlist();
                 searchInput.value = ''
-                displayStockTable(allStocks);
+                loader("hide")
             } else {
+                loader("hide")
                 console.error('Invalid data structure:', data);
             }
         } catch (error) {
+            loader("hide")
             return console.error('Error removing stock from watchlist:', error);
         }
     }
@@ -260,7 +278,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 stockAdded = data.response.stock_added;
                 fetchAllStocks()
                 alert("Stock added successfully.");
-                loader("hide")
             } else {
                 console.error('Invalid data structure:', data);
                 loader("hide")

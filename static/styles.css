@@ -79,7 +79,7 @@ h2 {
     display: grid;
     grid-template-rows: auto 1fr;
     grid-template-columns: 1fr;
-    height: 400px;
+    height: 600px;
     overflow: scroll;
 }
 
@@ -106,7 +106,7 @@ table th {
 #stock-table tbody {
     display: block;
     overflow-y: auto;
-    height: 400px; /* Adjust as needed */
+    height: 600px; /* Adjust as needed */
 }
 
 #stock-table tr {

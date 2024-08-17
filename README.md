@@ -40,5 +40,11 @@ This project was created to learn Full-Stack development, focusing initially on 
 ![alt text](webinterface_home.png)
 ![alt text](webinterface_addstock.png) 
 
+## _Installation_
+- python3 -m venv <venv_name>
+- source <venv_name>/bin/activate
+- pip install -r requirements.txt
+- flask run
+
 ## _License_
 **Free Software, Yeah!**

@@ -7,6 +7,7 @@ from model.stock import Stock
 from flask_cors import CORS
 import logging
 
+
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
 
 app = Flask(__name__)
@@ -161,3 +162,5 @@ def current_datetime():
 
 if __name__ == '__main__':  
     app.run()
+
+print(" I am Chandan")
